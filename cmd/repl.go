@@ -5,9 +5,9 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"github.com/codegangsta/cli"
-	"github.com/dustin/go-humanize"
-	"github.com/googollee/gocmd"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/codegangsta/cli"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/dustin/go-humanize"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/googollee/gocmd"
 	"github.com/kildevaeld/vault/server"
 	"github.com/kildevaeld/vault/vault"
 )

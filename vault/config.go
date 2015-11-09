@@ -8,10 +8,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/BurntSushi/toml"
-
-	"github.com/mitchellh/go-homedir"
-	"github.com/mitchellh/mapstructure"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/BurntSushi/toml"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/mitchellh/go-homedir"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/mitchellh/mapstructure"
 )
 
 type Config struct {

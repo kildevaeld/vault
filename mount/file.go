@@ -5,11 +5,11 @@ import (
 	"sync"
 	"time"
 
-	"bazil.org/fuse"
-	"bazil.org/fuse/fs"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/bazil.org/fuse"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/bazil.org/fuse/fs"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/golang.org/x/net/context"
 	"github.com/kildevaeld/vault/server"
 	"github.com/kildevaeld/vault/vault"
-	"golang.org/x/net/context"
 )
 
 type File struct {

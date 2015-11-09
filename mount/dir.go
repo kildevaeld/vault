@@ -4,16 +4,16 @@ import (
 	"archive/zip"
 	"os"
 
-	"bazil.org/fuse"
-	"bazil.org/fuse/fs"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/bazil.org/fuse"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/bazil.org/fuse/fs"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/golang.org/x/net/context" // nil for the root directory, which has no entry in the zip
 	"github.com/kildevaeld/vault/server"
 	"github.com/kildevaeld/vault/vault"
-	"golang.org/x/net/context"
 )
 
 type Dir struct {
 	client *server.Client
-	// nil for the root directory, which has no entry in the zip
+
 	item *vault.Item
 }
 

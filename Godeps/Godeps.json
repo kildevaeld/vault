@@ -1,0 +1,110 @@
+{
+	"ImportPath": "github.com/kildevaeld/vault",
+	"GoVersion": "go1.5.1",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "bazil.org/fuse",
+			"Rev": "70f2bea820ccbf0b4e72e44dbcb28fe333635085"
+		},
+		{
+			"ImportPath": "code.google.com/p/go-uuid/uuid",
+			"Comment": "null-15",
+			"Rev": "35bc42037350f0078e3c974c6ea690f1926603ab"
+		},
+		{
+			"ImportPath": "github.com/BurntSushi/toml",
+			"Comment": "v0.1.0-21-g056c9bc",
+			"Rev": "056c9bc7be7190eaa7715723883caffa5f8fa3e4"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.2.0-95-g9b2bd2b",
+			"Rev": "9b2bd2b3489748d4d0a204fa4eb2ee9e89e0ebc6"
+		},
+		{
+			"ImportPath": "github.com/dustin/go-humanize",
+			"Rev": "c20a8bde38c8f5ba06f6600edf473705c96829d1"
+		},
+		{
+			"ImportPath": "github.com/googollee/gocmd",
+			"Rev": "61c200d5358712e4ffd86023403f3d9e85c78e25"
+		},
+		{
+			"ImportPath": "github.com/gorilla/context",
+			"Rev": "1c83b3eabd45b6d76072b66b746c20815fb2872d"
+		},
+		{
+			"ImportPath": "github.com/gorilla/mux",
+			"Rev": "ee1815431e497d3850809578c93ab6705f1a19f7"
+		},
+		{
+			"ImportPath": "github.com/kildevaeld/go-ascii",
+			"Rev": "b201bb65ac498f9f7ad3df4553e556cddbe76dea"
+		},
+		{
+			"ImportPath": "github.com/kildevaeld/go-filecrypt",
+			"Rev": "df14d0595ced2f23721370b091f3604be7b74c2d"
+		},
+		{
+			"ImportPath": "github.com/kildevaeld/go-widgets",
+			"Rev": "5b3913fc6b38f0bd8d4179532dd02fc23995c183"
+		},
+		{
+			"ImportPath": "github.com/kildevaeld/prompt",
+			"Rev": "e1c25d02b13accdf86512f33c349cf3bf3439b7a"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/go-homedir",
+			"Rev": "7d2d8c8a4e078ce3c58736ab521a40b37a504c52"
+		},
+		{
+			"ImportPath": "github.com/mitchellh/mapstructure",
+			"Rev": "281073eb9eb092240d33ef253c404f1cca550309"
+		},
+		{
+			"ImportPath": "github.com/oleiade/reflections",
+			"Comment": "0.1.2-2-g632977f",
+			"Rev": "632977f98cd34d217c4b57d0840ec188b3d3dcaf"
+		},
+		{
+			"ImportPath": "github.com/pkg/term",
+			"Rev": "fed4d9ece00ede8d657a7c46ec968bd35f307b77"
+		},
+		{
+			"ImportPath": "github.com/rakyll/magicmime",
+			"Rev": "391d2065674ae1afa72e8d32f504266a5bbb3748"
+		},
+		{
+			"ImportPath": "github.com/ryanuber/go-glob",
+			"Rev": "0067a9abd927e50aed5190662702f81231413ae0"
+		},
+		{
+			"ImportPath": "github.com/tj/go-spin",
+			"Comment": "1.0.0-9-g4bd47d3",
+			"Rev": "4bd47d3603b5c0460028794fbbf207f881088c08"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/nacl/secretbox",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/poly1305",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/salsa20/salsa",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		},
+		{
+			"ImportPath": "golang.org/x/net/context",
+			"Rev": "03affa02f16950ea3188823456766ed60bfed9bb"
+		}
+	]
+}

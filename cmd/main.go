@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/codegangsta/cli"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/codegangsta/cli"
 	"github.com/kildevaeld/vault/server"
 	"github.com/kildevaeld/vault/vault"
 )

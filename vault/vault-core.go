@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/kildevaeld/go-filecrypt"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/kildevaeld/go-filecrypt"
 )
 
 type Vault struct {

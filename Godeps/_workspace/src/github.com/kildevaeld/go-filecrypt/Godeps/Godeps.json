@@ -1,0 +1,18 @@
+{
+	"ImportPath": "github.com/kildevaeld/filecrypt",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "golang.org/x/crypto/nacl/secretbox",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/poly1305",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/salsa20/salsa",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		}
+	]
+}

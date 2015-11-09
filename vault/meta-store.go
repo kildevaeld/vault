@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/ryanuber/go-glob"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/ryanuber/go-glob"
 )
 
 type itemMap map[FileId]*Item

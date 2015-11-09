@@ -1,0 +1,18 @@
+{
+	"ImportPath": "github.com/kildevaeld/go-widgets",
+	"GoVersion": "go1.5.1",
+	"Deps": [
+		{
+			"ImportPath": "github.com/kildevaeld/go-ascii",
+			"Rev": "a2aab2c749f1f5f897fd9a6a34da0428de06e707"
+		},
+		{
+			"ImportPath": "github.com/pkg/term",
+			"Rev": "fed4d9ece00ede8d657a7c46ec968bd35f307b77"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "81bf7719a6b7ce9b665598222362b50122dfc13b"
+		}
+	]
+}

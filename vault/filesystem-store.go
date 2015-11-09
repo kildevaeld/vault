@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	"code.google.com/p/go-uuid/uuid"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/code.google.com/p/go-uuid/uuid"
 )
 
 func Exists(name string) bool {

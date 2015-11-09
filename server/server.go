@@ -11,10 +11,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gorilla/mux"
-	"github.com/kildevaeld/go-filecrypt"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/gorilla/mux"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/kildevaeld/go-filecrypt"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/mitchellh/mapstructure"
 	"github.com/kildevaeld/vault/vault"
-	"github.com/mitchellh/mapstructure"
 )
 
 const (

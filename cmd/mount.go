@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"syscall"
 
-	"github.com/codegangsta/cli"
-	"github.com/kildevaeld/prompt"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/codegangsta/cli"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/kildevaeld/prompt"
 	"github.com/kildevaeld/vault/mount"
 	"github.com/kildevaeld/vault/server"
 )

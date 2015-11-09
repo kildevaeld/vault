@@ -1,7 +1,7 @@
 package mount
 
 import (
-	"bazil.org/fuse/fs"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/bazil.org/fuse/fs"
 	"github.com/kildevaeld/vault/server"
 )
 

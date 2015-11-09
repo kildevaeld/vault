@@ -8,8 +8,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/kildevaeld/go-filecrypt"
-	"github.com/rakyll/magicmime"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/kildevaeld/go-filecrypt"
+	"github.com/kildevaeld/vault/Godeps/_workspace/src/github.com/rakyll/magicmime"
 )
 
 // var (
