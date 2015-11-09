@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/kildevaeld/vault"
+	"github.com/codegangsta/cli"
+	"github.com/kildevaeld/vault/server"
+	"github.com/kildevaeld/vault/vault"
 )
 
 var (
@@ -12,36 +14,71 @@ var (
 	FILE = "main.go"
 )
 
+func realMain() int {
+
+	cPath, err := vault.ConfigFile()
+
+	if err != nil {
+		panic(err)
+	}
+
+	file, err := os.Open(cPath)
+	var config vault.Config
+	err = vault.DecodeConfig(file, &config)
+
+	if err != nil {
+		panic(err)
+	}
+	file.Close()
+
+	sConf, e := server.GetServerConfig(&config)
+	if e != nil {
+		panic(e)
+	}
+	client, err := server.NewVaultClient(&server.ClientConfig{
+		ServerConfig: sConf,
+	})
+
+	if err == nil {
+		err = client.Ping()
+	}
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Could not connect to vault\n%v\n", err)
+		return 1
+	}
+
+	app := cli.NewApp()
+	app.Name = "vault"
+
+	app.Version = "0.0.1"
+
+	app.Commands = initCommands(client)
+
+	err = app.Run(os.Args)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		return 1
+	}
+
+	return 0
+}
+
 func main() {
+	os.Exit(realMain())
+}
 
-	stat, _ := os.Stat(FILE)
-
-	size := stat.Size()
-	pkgSize := int64(1024 * 32)
-
-	fmt.Printf("File size %d - %d\n", size, size%pkgSize)
-	//var bb []byte
-	//var n [][]byte
-	file, _ := os.Open(FILE)
-	defer file.Close()
-	dest, _ := os.Create("test")
-	defer dest.Close()
-
-	key := vault.Key([]byte("key"))
-	err := vault.Encrypt(dest, file, stat.Size(), key)
-
-	if err != nil {
-		fmt.Printf("%v\n", err)
+func initCommands(client *server.Client) []cli.Command {
+	return []cli.Command{
+		addCommand(client),
+		listCommand(client),
+		mountCommand(client),
+		getCommand(client),
 	}
+}
 
-	tStat, _ := os.Stat("test")
-
-	testFile, _ := os.Open("test")
-	defer testFile.Close()
-	err = vault.Decrypt(os.Stdout, testFile, tStat.Size(), key)
-
-	if err != nil {
-		fmt.Printf("%v\n", err)
-	}
-
+func printErrorAndExit(err error) {
+	fmt.Printf("%v\n", err)
+	os.Exit(1)
 }
