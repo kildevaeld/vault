@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -52,34 +51,6 @@ func addCommand(client *server.Client) cli.Command {
 			},
 		},
 	}
-}
-
-func addJSON(v *vault.Vault, name string, data string, key *[32]byte) error {
-	var m map[string]interface{}
-	err := json.Unmarshal([]byte(data), &m)
-
-	if err != nil {
-		return err
-	}
-
-	_, e := v.AddBytes([]byte(data), vault.ItemCreateOptions{
-		Name: name,
-		Mime: "application/json",
-		Key:  key,
-	})
-
-	return e
-}
-
-func addStringSlice(v *vault.Vault, name string, data []string, key *[32]byte) error {
-
-	return nil
-}
-func addFile(v *vault.Vault, path string, options vault.ItemCreateOptions) error {
-
-	_, e := v.AddFromPath(path, options)
-
-	return e
 }
 
 func AddFile(path string, config addConfig, client *server.Client) {

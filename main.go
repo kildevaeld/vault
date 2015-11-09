@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/signal"
 	"strings"
@@ -33,12 +34,17 @@ func realMain() int {
 		fmt.Fprintf(os.Stderr, "Error while initializing meta store\n%v\n", err)
 		return 1
 	}
+	mC, _ := config.GetMetaConfig()
+	log.Printf("using metastore: %s\n", mC.Type())
 
 	fileStore, err = loadFileStore(config)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error while initializing file store\n%v\n", err)
 		return 1
 	}
+
+	fC, _ := config.GetFileStoreConfig()
+	log.Printf("using filestore: %s\n", fC.Type())
 
 	v := vault.NewVault(metaStore, fileStore)
 
@@ -50,16 +56,51 @@ func realMain() int {
 	}
 
 	s.Listen()
+	//err = wait(s)
 
-	defer s.Close()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		return 1
+	}
 
+	return 0
+}
+
+func wait(s *server.VaultServer) error {
+	done := make(chan error, 1)
+	defer close(done)
 	ch := make(chan os.Signal, 1)
+	defer close(ch)
 	signal.Notify(ch, os.Interrupt)
 	signal.Notify(ch, syscall.SIGTERM)
 
-	<-ch
+	go func() {
+		err := s.Listen()
+		if done != nil {
+			done <- err
+		}
 
-	return 0
+	}()
+
+	select {
+	case <-ch:
+		s.Close()
+	case err := <-done:
+		return err
+
+	}
+	return nil
+	/*
+		for {
+			select {
+			case <-ch:
+				s.Close()
+			case err := <-done:
+				return err
+			default:
+				// move along
+			}
+		}*/
 }
 
 func loadConfig() (*vault.Config, error) {
@@ -103,46 +144,32 @@ func loadConfig() (*vault.Config, error) {
 }
 
 func loadMetaStore(conf *vault.Config) (vault.MetaStore, error) {
-	var typ string
-	t := conf.MetaStore["Type"]
 
-	if t == nil {
-		t = conf.MetaStore["type"]
-	}
-	if t != nil {
-		typ = t.(string)
+	config, e := conf.GetMetaConfig()
+
+	if e != nil {
+		return nil, e
 	}
 
-	if typ == "Filesystem" || typ == "filesystem" {
-		var config vault.FileSystemMetaStoreConfig
-		err := mapstructure.Decode(conf.MetaStore, &config)
-		if err != nil {
-			return nil, err
-		}
-		return vault.NewFileSystemMetaStore(config)
+	var metaStore vault.MetaStore
+	if fs, ok := config.(vault.FileSystemMetaStoreConfig); ok {
+
+		metaStore, e = vault.NewFileSystemMetaStore(fs)
 	}
 
-	return nil, nil
-
+	return metaStore, e
 }
 
 func loadFileStore(conf *vault.Config) (vault.FileStore, error) {
-	var typ string
-	t := conf.MetaStore["Type"]
+	config, e := conf.GetFileStoreConfig()
 
-	if t == nil {
-		t = conf.MetaStore["type"]
-	}
-	if t != nil {
-		typ = t.(string)
+	if e != nil {
+		return nil, e
 	}
 
-	if typ == "Filesystem" || typ == "filesystem" {
-		var config vault.FileSystemFileStoreConfig
-		mapstructure.Decode(conf.FileStore, &config)
-		return vault.NewFileSystemFileStore(config), nil
+	if fs, ok := config.(vault.FileSystemFileStoreConfig); ok {
+		return vault.NewFileSystemFileStore(fs), nil
 	}
-
 	return nil, nil
 }
 
@@ -170,7 +197,7 @@ func loadServer(v *vault.Vault, conf *vault.Config) (*server.VaultServer, error)
 		mapstructure.Decode(conf.Server, &config)
 		sConf = config
 	}
-	fmt.Printf("%v", sConf)
+
 	return server.NewVaultServer(v, sConf)
 
 }

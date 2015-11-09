@@ -96,6 +96,7 @@ func (s *VaultServer) Listen() error {
 	s.mux.HandleFunc(UploadEndpoint, s.handleUpload).Methods("POST")
 	s.mux.HandleFunc(ListEndpoint, s.handleList).Methods("GET")
 	s.mux.HandleFunc(ReadEndpoint, s.handleRead).Methods("GET")
+	s.mux.HandleFunc("/{item_id}", s.handleDelete).Methods("DELETE")
 	//s.mux.HandleFunc("/{id}", f)
 	return http.Serve(s.listener, s.mux)
 
@@ -206,6 +207,31 @@ func (s *VaultServer) handleUpload(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (s *VaultServer) handleDelete(w http.ResponseWriter, r *http.Request) {
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+
+	vars := mux.Vars(r)
+
+	itemId := vars["item_id"]
+	fmt.Printf("item id %v", itemId)
+
+	err := s.vault.Remove(itemId)
+
+	if err != nil {
+		handleError(w, err, http.StatusInternalServerError)
+		return
+	}
+
+	m := vault.Map{
+		"message": "ok",
+		"code":    200,
+	}
+	b, _ := json.Marshal(m)
+	w.Write(b)
+
+}
+
 func (s *VaultServer) handleList(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -214,6 +240,7 @@ func (s *VaultServer) handleList(w http.ResponseWriter, r *http.Request) {
 
 	var items []*vault.Item
 	if name := q.Get("query"); name != "" {
+
 		items = s.vault.Find(name)
 	} else {
 		items = s.vault.List()
@@ -241,8 +268,6 @@ func (s *VaultServer) handleList(w http.ResponseWriter, r *http.Request) {
 func (self *VaultServer) handleRead(w http.ResponseWriter, r *http.Request) {
 
 	id := r.URL.Query().Get("id")
-
-	fmt.Printf("%v", r.URL)
 
 	if id == "" {
 		handleError(w, errors.New("no id"), http.StatusBadRequest)
@@ -279,11 +304,7 @@ func NewVaultServer(v *vault.Vault, config interface{}) (*VaultServer, error) {
 
 	var listener net.Listener
 	if unix, ok := config.(VaultServerUnixConfig); ok {
-		/*var addr *net.UnixAddr
-		addr, err = net.ResolveUnixAddr("unix", unix.Path)
-		if err == nil {
-			listener, err = net.ListenUnix("tcp", addr)
-		}*/
+
 		listener, err = net.Listen("unix", unix.Path)
 
 	} else if tcp, ok := config.(VaultServerTCPConfig); ok {

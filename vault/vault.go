@@ -1,7 +1,6 @@
 package vault
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"io"
@@ -59,14 +58,22 @@ type FileStore interface {
 	Remove(file FileId) error
 }
 
+type FileStoreConfig interface {
+	Type() string
+}
+
 type MetaStore interface {
 	Create(item *Item, options ItemCreateOptions) error
 	Read(name string) (*Item, error)
 	Find(nameOrTag string) ([]*Item, error)
 	Get(id string) (*Item, error)
 	Has(name string) bool
-	Remove(name string) error
+	Remove(id string) error
 	List() []*Item
+}
+
+type MetaStoreConfig interface {
+	Type() string
 }
 
 type Map map[string]interface{}
@@ -135,33 +142,11 @@ func validateOptions(options *ItemCreateOptions) bool {
 	return true
 }
 
-func (v *Vault) AddFromMap(m Map, options ItemCreateOptions) (*Item, error) {
-
-	b, e := json.Marshal(&m)
-
-	if e != nil {
-		return nil, e
-	}
-
-	options.Mime = "application/json"
-
-	return v.AddBytes(b, options)
-}
-
-func (v *Vault) AddBytes(bs []byte, options ItemCreateOptions) (*Item, error) {
-	b := bytes.NewReader(bs)
-	options.Size = uint64(len(bs))
-	return v.Add(b, options)
-}
-
 func (v *Vault) Get(id string) (*Item, error) {
 	return v.metaStore.Get(id)
 }
 
 func (v *Vault) Open(item *Item) (io.ReadCloser, error) {
-	/*if !v.metaStore.Has(item.Name) {
-		return nil
-	}*/
 
 	return v.fileStore.Read(item.Id)
 	//return o
@@ -187,20 +172,24 @@ func (v *Vault) Find(nameOrTag string) []*Item {
 func (v *Vault) List() []*Item {
 	return v.metaStore.List()
 }
-func (v *Vault) Remove(name string) error {
-	if !v.metaStore.Has(name) {
+func (v *Vault) Remove(id string) error {
+
+	item, e := v.metaStore.Get(id)
+
+	if e != nil {
+		return e
+	}
+	if item == nil {
 		return errors.New("!exists")
 	}
 
-	item, _ := v.metaStore.Read(name)
-
-	e := v.fileStore.Remove(item.Id)
+	e = v.fileStore.Remove(item.Id)
 
 	if e != nil {
 		return e
 	}
 
-	return v.metaStore.Remove(name)
+	return v.metaStore.Remove(id)
 }
 
 func NewVault(metaStore MetaStore, fileStore FileStore) *Vault {

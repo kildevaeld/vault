@@ -7,6 +7,8 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"sync"
+
+	"github.com/ryanuber/go-glob"
 )
 
 type itemMap map[FileId]*Item
@@ -25,9 +27,13 @@ func findByNameOrTag(haystack itemMap, nameOrTag string) []*Item {
 	var out []*Item
 
 	for _, v := range haystack {
-		if v.Name == nameOrTag || contains(v.Tags, nameOrTag) {
+		if glob.Glob(nameOrTag, v.Name) {
 			out = append(out, v)
 		}
+		/*if v.Name == nameOrTag || contains(v.Tags, nameOrTag) {
+
+			out = append(out, v)
+		}*/
 	}
 	return out
 }
@@ -47,6 +53,10 @@ func hasItem(haystack itemMap, name string) bool {
 
 type FileSystemMetaStoreConfig struct {
 	Path string
+}
+
+func (self FileSystemMetaStoreConfig) Type() string {
+	return "Filesystem"
 }
 
 type FileSystemMetaStore struct {
@@ -125,12 +135,16 @@ func (f *FileSystemMetaStore) Has(name string) bool {
 	return hasItem(f.files, name)
 }
 
-func (f *FileSystemMetaStore) Remove(name string) error {
+func (f *FileSystemMetaStore) Remove(id string) error {
 
-	item, e := f.Read(name)
+	item, e := f.Get(id)
 
 	if e != nil {
 		return e
+	}
+
+	if item == nil {
+		return errors.New("not found")
 	}
 
 	delete(f.files, item.Id)

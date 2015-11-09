@@ -111,8 +111,42 @@ func (self *Client) List() ([]*vault.Item, error) {
 	return out, e
 }
 
-func (self *Client) Find(q Query) ([]*vault.Item, error) {
-	return nil, nil
+func (self *Client) Find(glob string) ([]*vault.Item, error) {
+
+	req, e := http.NewRequest("GET", self.config.Endpoint("list"), nil)
+
+	if e != nil {
+		fmt.Printf("error")
+		return nil, e
+	}
+
+	q := req.URL.Query()
+	q.Set("query", glob)
+	req.URL.RawQuery = q.Encode()
+
+	r, err := self.client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if r.StatusCode != 200 {
+		return nil, errors.New(r.Status)
+	}
+
+	var out []*vault.Item
+	buf := bytes.NewBuffer(nil)
+	_, e = io.Copy(buf, r.Body)
+	defer r.Body.Close()
+
+	if e != nil {
+		return nil, e
+	}
+
+	e = json.Unmarshal(buf.Bytes(), &out)
+
+	return out, e
+
 }
 
 func (self *Client) Get(id string) (*vault.Item, error) {
@@ -122,7 +156,7 @@ func (self *Client) Get(id string) (*vault.Item, error) {
 
 func (self *Client) Reader(id string) (io.ReadCloser, error) {
 
-	req, e := http.NewRequest("GET", "http://localhost:8080/read", nil)
+	req, e := http.NewRequest("GET", self.config.Endpoint("read"), nil)
 
 	if e != nil {
 		return nil, e
@@ -147,6 +181,30 @@ func (self *Client) Reader(id string) (io.ReadCloser, error) {
 	}
 
 	return res.Body, nil
+}
+
+func (self *Client) Remove(id string) error {
+
+	req, e := http.NewRequest("DELETE", self.config.Endpoint(id), nil)
+
+	if e != nil {
+		return e
+	}
+
+	res, err := self.client.Do(req)
+
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != http.StatusOK {
+		var msg ErrorMessage
+		decodeBody(readBody(res.Body), &msg)
+		defer res.Body.Close()
+		err := fmt.Errorf(msg.Error)
+		return err
+	}
+	return nil
 }
 
 func (self *Client) Create(r io.Reader, options vault.ItemCreateOptions) (*vault.Item, error) {

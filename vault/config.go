@@ -2,6 +2,7 @@ package vault
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"io/ioutil"
 	"os"
@@ -79,7 +80,7 @@ func DefaultConfig() *Config {
 
 }
 
-func (v *Config) GetMetaConfig() (interface{}, error) {
+func (v *Config) GetMetaConfig() (MetaStoreConfig, error) {
 	var typ string
 	t := v.MetaStore["Type"]
 
@@ -96,14 +97,14 @@ func (v *Config) GetMetaConfig() (interface{}, error) {
 		if err != nil {
 			return nil, err
 		}
-		return &config, nil
+		return config, nil
 	}
 
-	return nil, nil
+	return nil, errors.New("meta")
 
 }
 
-func (v *Config) GetFileStoreConfig() (interface{}, error) {
+func (v *Config) GetFileStoreConfig() (FileStoreConfig, error) {
 	var typ string
 	t := v.FileStore["Type"]
 
@@ -117,10 +118,10 @@ func (v *Config) GetFileStoreConfig() (interface{}, error) {
 	if typ == "Filesystem" || typ == "filesystem" {
 		var config FileSystemFileStoreConfig
 		mapstructure.Decode(v.FileStore, &config)
-		return &config, nil
+		return config, nil
 	}
 
-	return nil, nil
+	return nil, errors.New("filestore")
 
 }
 

@@ -21,6 +21,10 @@ type FileSystemFileStoreConfig struct {
 	Path string
 }
 
+func (self FileSystemFileStoreConfig) Type() string {
+	return "FileSystem"
+}
+
 type FileSystemFileStore struct {
 	path string
 	lock *sync.Mutex

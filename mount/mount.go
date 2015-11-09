@@ -13,7 +13,8 @@ type Mount struct {
 }
 
 func (self *Mount) Serve() error {
-	c, err := fuse.Mount(self.mount)
+
+	c, err := fuse.Mount(self.mount, fuse.FSName("vault-mount"), fuse.VolumeName("vault"))
 	if err != nil {
 		return err
 	}

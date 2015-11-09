@@ -75,6 +75,7 @@ func initCommands(client *server.Client) []cli.Command {
 		listCommand(client),
 		mountCommand(client),
 		getCommand(client),
+		removeCommand(client),
 	}
 }
 
